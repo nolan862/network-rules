@@ -3,12 +3,26 @@ function main(config) {
   const proxyServer = "172.29.1.162";
   const proxyPort = 1080;
 
-  // 保留订阅原有节点，删除可能存在的同名旧节点
+  const domainRules = [
+    `DOMAIN-SUFFIX,paynex.tech,${proxyName}`,
+    `DOMAIN-SUFFIX,payxking.club,${proxyName}`,
+    `DOMAIN-SUFFIX,koifish.co,${proxyName}`
+  ];
+
+  const directProxyRule =
+    `IP-CIDR,${proxyServer}/32,DIRECT,no-resolve`;
+
+  /*
+   * 保留订阅原有节点，并删除旧的同名节点，
+   * 避免重复加载全局覆写时出现节点重名。
+   */
   config.proxies = Array.isArray(config.proxies)
-    ? config.proxies.filter(proxy => proxy.name !== proxyName)
+    ? config.proxies.filter(
+        proxy => proxy.name !== proxyName
+      )
     : [];
 
-  // 添加 Pritunl 内网 SOCKS5 节点
+  // 添加 Pritunl 内网的无认证 SOCKS5 节点
   config.proxies.push({
     name: proxyName,
     type: "socks5",
@@ -18,27 +32,28 @@ function main(config) {
   });
 
   // 保留订阅原有规则
-  config.rules = Array.isArray(config.rules) ? config.rules : [];
+  config.rules = Array.isArray(config.rules)
+    ? config.rules
+    : [];
 
-  const paynexRule =
-    `DOMAIN-SUFFIX,paynex.tech,${proxyName}`;
+  // 删除以前添加过的相同规则，避免重复
+  const managedRules = new Set([
+    directProxyRule,
+    ...domainRules
+  ]);
 
-  const directProxyRule =
-    `IP-CIDR,${proxyServer}/32,DIRECT,no-resolve`;
-
-  // 删除旧的重复规则
-  config.rules = config.rules.filter(rule =>
-    rule !== paynexRule &&
-    rule !== directProxyRule
+  config.rules = config.rules.filter(
+    rule => !managedRules.has(rule)
   );
 
   /*
-   * 先让 SOCKS5 服务器本身走系统路由/Pritunl，
-   * 再让 paynex.tech 全部子域名走 SOCKS5。
+   * 插入到规则最前面：
+   * 1. SOCKS5 服务本身交给系统路由，经 Pritunl 访问；
+   * 2. 三组业务域名统一发给 SOCKS5。
    */
   config.rules.unshift(
     directProxyRule,
-    paynexRule
+    ...domainRules
   );
 
   return config;
