@@ -6,7 +6,8 @@ function main(config) {
   const domainRules = [
     `DOMAIN-SUFFIX,paynex.tech,${proxyName}`,
     `DOMAIN-SUFFIX,payxking.club,${proxyName}`,
-    `DOMAIN-SUFFIX,koifish.co,${proxyName}`
+    `DOMAIN-SUFFIX,koifish.co,${proxyName}`,
+    `DOMAIN-SUFFIX,paygrid.world,${proxyName}`
   ];
 
   const directProxyRule =
