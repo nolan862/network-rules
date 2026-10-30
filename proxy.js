@@ -8,7 +8,8 @@ function main(config) {
     `DOMAIN-SUFFIX,payxking.club,${proxyName}`,
     `DOMAIN-SUFFIX,koifish.co,${proxyName}`,
     `DOMAIN-SUFFIX,paygrid.world,${proxyName}`,
-    `DOMAIN-SUFFIX,lionpay.live,${proxyName}`
+    `DOMAIN-SUFFIX,lionpay.live,${proxyName}`,
+    `DOMAIN-SUFFIX,novolink.top,${proxyName}`
   ];
 
   const directProxyRule =
