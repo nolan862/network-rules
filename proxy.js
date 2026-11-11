@@ -10,7 +10,8 @@ function main(config) {
     `DOMAIN-SUFFIX,paygrid.world,${proxyName}`,
     `DOMAIN-SUFFIX,lionpay.live,${proxyName}`,
     `DOMAIN-SUFFIX,novolink.top,${proxyName}`,
-    `DOMAIN-SUFFIX,paygrid.pro,${proxyName}`
+    `DOMAIN-SUFFIX,paygrid.pro,${proxyName}`,
+    `DOMAIN-SUFFIX,s-unionpay.com,${proxyName}`
   ];
 
   const directProxyRule =
